@@ -120,9 +120,10 @@ gDSconfig.json
 
 ### Usage
 At the command line:
+
 `npm run gds` normal mode
+
 `npm run gds:debug` debug mode with extra logging
-```
 
 ### What can it do now
 
