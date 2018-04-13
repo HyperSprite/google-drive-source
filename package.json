@@ -22,7 +22,7 @@
     "google-drive-source": "dst/bin/index.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "echo \"Should probably write some tests!\"",
     "test:dev": "jest --watch",
     "lint": "eslint src/* .jsx",
     "build": "rm -rf dst && babel src --out-dir dst --ignore test.js",
