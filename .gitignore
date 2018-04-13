@@ -10,3 +10,10 @@ npm-debug.log*
 todolist.md
 
 /dst
+/bin
+
+gDSauth.json
+gDSconfig.json
+src/pages/**/*
+
+*-copy.js

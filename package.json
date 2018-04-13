@@ -1,13 +1,14 @@
 {
+  "version": "1.0.1",
   "author": "C. Dunavan",
-  "name": "@hypersprite/rename-me",
-  "homepage": "https://github.com/HyperSprite/rename-me#readme",
+  "name": "google-drive-source",
+  "homepage": "https://github.com/HyperSprite/google-drive-source#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HyperSprite/rename-me.git"
+    "url": "git+https://github.com/HyperSprite/google-drive-source.git"
   },
   "bugs": {
-    "url": "https://github.com/HyperSprite/rename-me/issues"
+    "url": "https://github.com/HyperSprite/google-drive-source/issues"
   },
   "keywords": [
     "testing",
@@ -15,15 +16,19 @@
     "basic"
   ],
   "license": "MIT",
-  "description": "rename-me",
+  "description": "Download folder contents from google drive using API service accout",
   "main": "dst/index.js",
-  "version": "1.0.3",
+  "bin": {
+    "google-drive-source": "dst/bin/index.js"
+  },
   "scripts": {
     "test": "jest",
     "test:dev": "jest --watch",
     "lint": "eslint src/* .jsx",
-    "build": "rm -rf dst && babel src --out-dir dst --ignore spec.js",
+    "build": "rm -rf dst && babel src --out-dir dst --ignore test.js",
     "build:dev": "npm run build -- -w",
+    "cl": "google-drive-source",
+    "cl:debug": "DEBUG=gDS nodemon dst/index.js",
     "preversion": "npm run test && npm run lint",
     "version": "npm run build",
     "postversion": "npm publish && git push"
@@ -32,15 +37,12 @@
     "dst"
   ],
   "precommit": [
-    "lint",
-    "test"
   ],
   "eslintConfig": {
     "extends": [
       "airbnb"
     ],
     "env": {
-      "browser": true,
       "node": true,
       "es6": true,
       "jest": true
@@ -62,7 +64,7 @@
         1,
         {
           "extensions": [
-            "spec.js",
+            "test.js",
             ".jsx"
           ]
         }
@@ -76,7 +78,7 @@
       "./.enzyme"
     ],
     "testMatch": [
-      "<rootDir>/src/**/*.spec.*"
+      "<rootDir>/src/**/*.test.*"
     ],
     "collectCoverage": true
   },
@@ -101,8 +103,11 @@
     "react-test-renderer": "^16.2.0"
   },
   "dependencies": {
+    "debug": "^3.1.0",
+    "googleapis": "^28.1.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "shelljs": "^0.8.1"
   }
 }
