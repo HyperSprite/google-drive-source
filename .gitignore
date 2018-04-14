@@ -14,6 +14,8 @@ todolist.md
 
 gDSauth.json
 gDSconfig.json
+gds-auth.json
+gds-config.json
 src/pages/**/*
 
 *-copy.js

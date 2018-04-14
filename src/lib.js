@@ -67,18 +67,20 @@ lib.getFilesFromDrive = (folder, files, drive) => {
     const fileName = `${folder.outputRoot}${folder.localFolder}${file.name}${folder.fileExtension}`;
     const dest = fs.createWriteStream(fileName);
     try {
-      const result = await drive.files[folder.files]({ fileId: file.id, ...folder.opt },
-          { responseType: 'stream' });
+      const result = await drive.files[folder.files](
+        { fileId: file.id, ...folder.opt },
+        { responseType: 'stream' },
+      );
       result.data
-          .on('end', () => {
-            console.log(`${folder.docType} downloaded > ${fileName}`);
-            resolve();
-          })
-          .on('error', (error) => {
-            console.warn(`Error ${folder.docType} downloading > ${fileName}\n`, error);
-            reject(error);
-          })
-          .pipe(dest);
+        .on('end', () => {
+          console.log(`${folder.docType} downloaded > ${fileName}`);
+          resolve();
+        })
+        .on('error', (error) => {
+          console.warn(`Error ${folder.docType} downloading > ${fileName}\n`, error);
+          reject(error);
+        })
+        .pipe(dest);
     } catch (error) {
       const mssg = `${error.response.status} ${error.response.statusText}`;
       console.warn(`File Get and Write returned an error: ${mssg}`);
@@ -90,7 +92,7 @@ lib.getFolder = async (userFolder, drive) => {
   // Get a list of files from a google folder
   const folder = { ...lib.folderDefaults, ...lib.docType[userFolder.docType], ...userFolder };
   if (!folder.folderId) {
-    console.warn('folderId is required, check gDSconfig.json');
+    console.warn('folderId is required, check gds-config.json');
   }
   try {
     const response = await drive.files.list({

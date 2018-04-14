@@ -24,12 +24,12 @@ If you have a build script, you could combine them so you download your latest p
 ### Config files
 
 You need to create two files in the root of your project.
-gDSauth.json
-gDSconfig.json
+gds-auth.json
+gds-config.json
 
 **Add these files to your .gitignore now!**
 
-**gDSauth.json is your Google API Service Account Key file.**
+**gds-auth.json is your Google API Service Account Key file.**
 
 Your Service Account Key downloaded from the Google API Dashboard, e.g. (subject to change at Googles whim):
 
@@ -45,30 +45,13 @@ From the [Google API Console](https://console.cloud.google.com/apis)
    * This only needs "read" access
    * Download.
 
-The contents of the file will look like this:
 
-```json
-
-{
-  "type": "service_account",
-  "project_id": "some-crazy-name",
-  "private_key_id": "some-uri-blahblahblah",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nsomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthinghere\n-----END PRIVATE KEY-----\n",
-  "client_email": "THE_EMAIL_ADDRESS_YOU_SHARE_YOUR_FOLDERS_WITH",
-  "client_id": "1234567890987654321",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://accounts.google.com/o/oauth2/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/blahblahblahblahinhere.iam.gserviceaccount.com"
-}
-
-```
 
 In your Google drive, create or find a folder with some docs for your blog-posts and share it with the email address from your token above. **This folder should contain all of the same kind of docs.** Make note of the folder id (everything after the "/" in the folders URL).
 
 Repeat for as many folders as you want for source. One option might be if you had multiple team members working independently but contributing to the same project, you could have each manage their own blog post folder and share it with the same email address and add it to the config.folders array.
 
-**gDSconfig.json is your config file**
+**gds-config.json is your config file**
 
 Options:
 
@@ -88,9 +71,38 @@ Options:
   *  "text" download Google doc as txt
  * defaultSize: number of files to download in folder, defaults to 100
 
-Example file
 
-gDSconfig.json
+### Usage
+
+At the command line:
+
+`npm run gds` normal mode
+
+`npm run gds:debug` debug mode with extra logging
+
+
+### Example files
+
+gds-auth.json
+
+```json
+
+{
+  "type": "service_account",
+  "project_id": "some-crazy-name",
+  "private_key_id": "some-uri-blahblahblah",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nsomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthingheresomelongthinghere\n-----END PRIVATE KEY-----\n",
+  "client_email": "THE_EMAIL_ADDRESS_YOU_SHARE_YOUR_FOLDERS_WITH",
+  "client_id": "1234567890987654321",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/blahblahblahblahinhere.iam.gserviceaccount.com"
+}
+
+```
+
+gds-config.json
 ```json
 {
   "outputRoot": "./src/pages/",
@@ -118,24 +130,12 @@ gDSconfig.json
 }
 ```
 
-### Usage
-At the command line:
-
-`npm run gds` normal mode
-
-`npm run gds:debug` debug mode with extra logging
-
-### What can it do now
-
-If you write your Google docs in Markdown, this can download all the files in a folder and save them to their assigned folders.  
-
 ### Todo
 
 * Concurrent downloads (right now runs serially on purpose, see note below)
 * Check existing files for dates and only download new files.
 * Run in watch mode and update files in real time
 * Add tests
-
 
 ### Code notes:
 

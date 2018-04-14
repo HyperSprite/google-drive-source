@@ -17,13 +17,13 @@ const findFile = (name) => {
   return fs.existsSync(filePath) && fs.statSync(filePath).isFile() ? filePath : name;
 };
 
-const config = JSON.parse(fs.readFileSync(findFile('gDSconfig.json'), 'utf8'));
+const config = JSON.parse(fs.readFileSync(findFile('gds-config.json'), 'utf8'));
 if (!config || !config.outputRoot || !Array.isArray(config.folders)) {
-  console.warn('Config invalid, check "outputRoot" and "folders" array in gDSconfig.json, exiting');
+  console.warn('Config invalid, check "outputRoot" and "folders" array in gds-config.json, exiting');
   process.exit();
 }
 
-const auth = JSON.parse(fs.readFileSync(findFile('gDSauth.json'), 'utf8'));
+const auth = JSON.parse(fs.readFileSync(findFile('gds-auth.json'), 'utf8'));
 if (!auth.client_email || !auth.client_id) {
   console.warn('Auth invalid, exiting');
   process.exit();
