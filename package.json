@@ -74,6 +74,7 @@
     "pre-commit": "^1.2.2"
   },
   "dependencies": {
+    "date-fns": "^1.29.0",
     "debug": "^3.1.0",
     "googleapis": "^28.1.0",
     "shelljs": "^0.8.1"

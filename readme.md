@@ -1,7 +1,10 @@
 # Google Drive Source
 
-Write your articles and store images in google drive and then download them to a specified folder.
-I am using this to keep my Gatsby blog up to date by writing Markdown and saving images in Google drive and then syncing that to my blog.
+Write articles, store images, whatever in google drive and then download them to a specified folders.
+
+I built this to keep my Gatsby blog up to date by writing Markdown and saving images in Google drive and then syncing that to my blog. Turns out, it also supports Google Drawings, Sheets if you want to sync that.
+
+For a comprehensive step by step install walkthrough see the [Getting started with google-drive-source slide deck](https://gatsby-site-gds-slide-deck.rcrsv.com)
 
 ## Install
 ```npm install --save google-drive-source```
@@ -15,16 +18,20 @@ In your package.json file add the following to the "scripts" key
     "gds:debug": "DEBUG=gDS google-drive-source"
 ```
 
-If you have a build script, you could combine them so you download your latest pages just prior to building.
+If you have a build script, you could combine them with [concurrently](https://www.npmjs.com/package/concurrently) so you download your latest pages just prior to building and keep them updating throughout.
 
 ```json
-  "build:gds: "npm run gds && npm run build"
+  "build:gds": "concurrently 'npm run gds' 'npm run build' "
 ```
+By default the gds script runs every 60 seconds. At that time, it fetches a list of files in the folder specified and checks for changes. If no changes, it goes back to sleep and waits. If changes occured, it will fetch only the docs that changed and go to sleep.
+
+You can adjust this time in your scripts or at the command line with WAIT. WAIT accepts minutes. If you want it to  wait 10 minutes, use `WAIT=10`. If you want it to wait about 10 seconds, you can use "WAIT=0.16". Be careful if you are making a lot of changes and/or you have a really slow connection or you may end up starting a new fetch before the old fetch is done.
 
 ### Config files
 
 You need to create two files in the root of your project.
 gds-auth.json
+
 gds-config.json
 
 **Add these files to your .gitignore now!**
@@ -32,6 +39,9 @@ gds-config.json
 **gds-auth.json is your Google API Service Account Key file.**
 
 Your Service Account Key downloaded from the Google API Dashboard, e.g. (subject to change at Googles whim):
+
+<details/>
+  <summary>Get a Service Account Key from Google</summary>
 
 From the [Google API Console](https://console.cloud.google.com/apis)
 
@@ -43,8 +53,12 @@ From the [Google API Console](https://console.cloud.google.com/apis)
    * Key Type: JSON
    * Assign local part of email address. You will use this email address to share folders and files. Make this something you will recognize when reviewing your Drive shares later.
    * This only needs "read" access
-   * Download.
+   * Download
+   * Go to Library
+   * Search for Drive and select it
+   * Click "Enable"
 
+</details>
 
 
 In your Google drive, create or find a folder with some docs for your blog-posts and share it with the email address from your token above. **This folder should contain all of the same kind of docs.** Make note of the folder id (everything after the "/" in the folders URL).
@@ -63,10 +77,12 @@ Options:
  * localFolder: Required - sub-folder of outputRoot. Minimum entry is "/"
  * folderId: Required - Google Drive folder id from folders URL that was shared with the service account email
  * docType: defaults to "md" downloads Google docs as text and adds ".md" file extension, other options are:
-  * "csv download the first page of a Google sheet as csv
-  * "drawingImg: download Google drawings as png
-  * "drawingSvg: download Google drawings as svg
+  * "csv" download the first page of a Google sheet as csv
+  * "drawingImg": download Google drawings as png
+  * "drawingSvg": download Google drawings as svg
   * "html" download a Google doc as html
+  * "js" download a Google doc as text and save with `.js` extension
+  * "json" download a Google doc as text and save with `.json` extension
   * "media" download images and video
   *  "text" download Google doc as txt
  * defaultSize: number of files to download in folder, defaults to 100
@@ -76,7 +92,9 @@ Options:
 
 At the command line:
 
-`npm run gds` normal mode
+`npm run gds` normal mode, runs every minute
+
+`WAIT=5 npm run gds` runs gds every 5 minutes
 
 `npm run gds:debug` debug mode with extra logging
 
@@ -133,8 +151,6 @@ gds-config.json
 ### Todo
 
 * Concurrent downloads (right now runs serially on purpose, see note below)
-* Check existing files for dates and only download new files.
-* Run in watch mode and update files in real time
 * Add tests
 
 ### Code notes:

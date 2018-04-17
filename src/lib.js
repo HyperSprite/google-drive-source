@@ -1,5 +1,7 @@
 import fs from 'fs';
+import path from 'path';
 import { mkdir, test } from 'shelljs';
+import { isAfter } from 'date-fns';
 import gDSDebug from './index';
 
 const defaultFields = 'version, properties, id, kind, name, modifiedTime, trashed, fullFileExtension, fileExtension';
@@ -43,6 +45,12 @@ lib.docType = {
     opt: { mimeType: 'text/html' },
     fileExtension: '.html',
   },
+  js: {
+    fileExtension: '.js',
+  },
+  json: {
+    fileExtension: '.json',
+  },
   media: {
     files: 'get',
     opt: { alt: 'media' },
@@ -60,30 +68,49 @@ lib.makeDirs = (fullPath) => {
   }
 };
 
+// get file stat
+const getLocalFileStat = fileName =>
+    new Promise((response) => {
+      fs.stat(fileName, (err, fStat) => {
+        if (err) response({ mtime: null });
+        else if (fStat.size <= 1) response({ mtime: null });
+        else response(fStat);
+      });
+    });
+
 // GET https://www.googleapis.com/drive/v2/files/folderId/children
 lib.getFilesFromDrive = (folder, files, drive) => {
   gDSDebug(folder);
+
+  // const currentFiles = lib.getFolderContents();
   lib.asyncForEach(files, async file => new Promise(async (resolve, reject) => {
-    const fileName = `${folder.outputRoot}${folder.localFolder}${file.name}${folder.fileExtension}`;
-    const dest = fs.createWriteStream(fileName);
-    try {
-      const result = await drive.files[folder.files](
-        { fileId: file.id, ...folder.opt },
-        { responseType: 'stream' },
-      );
-      result.data
-        .on('end', () => {
-          console.log(`${folder.docType} downloaded > ${fileName}`);
-          resolve();
-        })
-        .on('error', (error) => {
-          console.warn(`Error ${folder.docType} downloading > ${fileName}\n`, error);
-          reject(error);
-        })
-        .pipe(dest);
-    } catch (error) {
-      const mssg = `${error.response.status} ${error.response.statusText}`;
-      console.warn(`File Get and Write returned an error: ${mssg}`);
+    const fileName = path.join(folder.outputRoot, folder.localFolder, `${file.name}${folder.fileExtension}`);
+    const localFileStat = await getLocalFileStat(fileName);
+
+    if (isAfter(localFileStat.mtime, file.modifiedTime)) {
+      gDSDebug(`||| no change: ${folder.docType} ${fileName}`);
+      resolve();
+    } else {
+      const dest = fs.createWriteStream(fileName);
+      try {
+        const result = await drive.files[folder.files](
+          { fileId: file.id, ...folder.opt },
+          { responseType: 'stream' },
+        );
+        result.data
+          .on('end', () => {
+            console.log(`>>> downloaded: ${folder.docType} ${fileName}`);
+            resolve();
+          })
+          .on('error', (error) => {
+            console.warn(`Error ${folder.docType} downloading > ${fileName}\n`, error);
+            reject(error);
+          })
+          .pipe(dest);
+      } catch (error) {
+        const mssg = `${error.response.status} ${error.response.statusText}`;
+        console.warn(`File Get and Write returned an error: ${mssg}`);
+      }
     }
   }));
 };
@@ -104,7 +131,7 @@ lib.getFolder = async (userFolder, drive) => {
     if (files.length === 0) {
       console.warn(`No files found for ${folder.localFolder}:`);
     } else {
-      console.log(`${folder.localFolder}:`);
+      console.log(`${folder.outputRoot}${folder.localFolder}`);
       lib.getFilesFromDrive(folder, files, drive);
     }
   } catch (error) {
