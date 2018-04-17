@@ -23,9 +23,17 @@ If you have a build script, you could combine them with [concurrently](https://w
 ```json
   "build:gds": "concurrently 'npm run gds' 'npm run build' "
 ```
-By default the gds script runs every 60 seconds. At that time, it fetches a list of files in the folder specified and checks for changes. If no changes, it goes back to sleep and waits. If changes occured, it will fetch only the docs that changed and go to sleep.
+By default the gds script runs once and fetches a list of files in the folder specified and checks for changes. If no changes, it terminates. If changes occured, it will fetch only the docs and images that changed and then terminate.
 
-You can adjust this time in your scripts or at the command line with WAIT. WAIT accepts minutes. If you want it to  wait 10 minutes, use `WAIT=10`. If you want it to wait about 10 seconds, you can use `WAIT=0.16`. Be careful if you are making a lot of changes and/or you have a really slow connection or you may end up starting a new fetch before the old fetch is done.
+If you want to have it run at an interval, you can set a WAIT in minutes at the command line. If you want it to  wait 10 minutes, use `WAIT=10 npm run gds`. If you want it to wait about 10 seconds, you can use `WAIT=0.16 npm run gds`.
+
+#### Two things to note and one bug
+
+* If you check too often, you may start stacking up request for the same file.
+* Since Google Docs are always saving, updates can happen in the middle of an edit so make sure you run gds one last time before you publish to make sure you have the latest.
+* Now the bug, I have noticed in testing that sometimes Google Docs get stuck. They end up with a 0 byte size. I believe this is on the Google side related to the item being out of sync between datacenters or something. I have not found a pattern to this issue yet and gds will retry 0 byte files but sometimes it can take awhile for it to download correctly.
+
+
 
 ### Config files
 

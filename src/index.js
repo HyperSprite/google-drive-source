@@ -11,8 +11,6 @@ const gDSDebug = debug('gDS');
 const cwd = process.cwd();
 gDSDebug('cwd', cwd);
 
-const waitTime = 60000 * (process.env.WAIT * 1 || 1);
-
 const findFile = (name) => {
   const filePath = path.resolve(cwd, name);
   gDSDebug('filePath', filePath);
@@ -70,7 +68,12 @@ const createFoldersAndFiles = () => {
 };
 
 createFoldersAndFiles();
-console.log(`WAIT=${waitTime / 60000} min`);
-setInterval(createFoldersAndFiles, waitTime);
+
+
+if (process.env.WAIT) {
+  const waitTime = 60000 * (process.env.WAIT * 1 || 1);
+  console.log(`WAIT=${waitTime / 60000} min`);
+  setInterval(createFoldersAndFiles, waitTime);
+}
 
 export default gDSDebug;
