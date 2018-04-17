@@ -25,32 +25,32 @@ lib.folderDefaults = {
   docType: 'md',
   files: 'export',
   opt: { mimeType: 'text/plain' },
-  fileExtension: '.md', // downloading plain text that was already written as Markdown
+  fileExtension: 'md', // downloading plain text that was already written as Markdown
 };
 
 lib.docType = {
   // md is the default
   csv: {
     opt: { mimeType: 'text/csv' },
-    fileExtension: '.csv',
+    fileExtension: 'csv',
   },
   drwaingImg: {
     opt: { mimeType: 'image/png' },
-    fileExtension: '.png',
+    fileExtension: 'png',
   },
   drawingSvg: {
     opt: { mimeType: 'image/svg+xml' },
-    fileExtension: '.svg',
+    fileExtension: 'svg',
   },
   html: {
     opt: { mimeType: 'text/html' },
-    fileExtension: '.html',
+    fileExtension: 'html',
   },
   js: {
-    fileExtension: '.js',
+    fileExtension: 'js',
   },
   json: {
-    fileExtension: '.json',
+    fileExtension: 'json',
   },
   media: {
     files: 'get',
@@ -58,7 +58,7 @@ lib.docType = {
     fileExtension: '', // already part of the file name
   },
   text: {
-    fileExtension: '.txt',
+    fileExtension: 'txt',
   },
 };
 
@@ -84,8 +84,10 @@ lib.getFilesFromDrive = (folder, files, drive) => {
   gDSDebug(folder);
 
   lib.asyncForEach(files, async file => new Promise(async (resolve, reject) => {
-    console.log(kebabCase(file.name));
-    const fileName = path.join(folder.outputRoot, folder.localFolder, `${kebabCase(file.name)}${folder.fileExtension}`);
+    const fName = kebabCase(file.name.split('.')[0]);
+    const fExt = file.name.split('.')[1];
+    const fileName = path.join(folder.outputRoot, folder.localFolder, `${fName}.${fExt || folder.fileExtension}`);
+    gDSDebug(`||| ${fileName}`);
     const localFileStat = await getLocalFileStat(fileName);
 
     if (isAfter(localFileStat.mtime, file.modifiedTime)) {

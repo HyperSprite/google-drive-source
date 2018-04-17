@@ -1,5 +1,5 @@
 {
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "C. Dunavan",
   "name": "google-drive-source",
   "homepage": "https://github.com/HyperSprite/google-drive-source#readme",
@@ -31,7 +31,6 @@
     "build:dev": "npm run build -- -w",
     "cl": "google-drive-source",
     "cl:debug": "DEBUG=gDS nodemon dst/index.js",
-    "preversion": "npm run test && npm run lint",
     "version": "npm run build",
     "postversion": "npm publish && git push"
   },
