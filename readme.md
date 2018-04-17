@@ -1,10 +1,10 @@
 # Google Drive Source
 
-Write articles, store images, whatever in google drive and then download them to a specified folders.
+Write articles, store images, _whatever_ in Google Drive and then download them to a specified folders.
 
-I built this to keep my Gatsby blog up to date by writing Markdown and saving images in Google drive and then syncing that to my blog. Turns out, it also supports Google Drawings, Sheets if you want to sync that.
+I built this to keep my Gatsby blog up to date by writing Markdown and saving images in Google Drive and then syncing that to my blog. Turns out, it also supports Google Drawings and Sheets if you want to sync that.
 
-For a comprehensive step by step install walkthrough see the [Getting started with google-drive-source slide deck](https://gatsby-site-gds-slide-deck.rcrsv.com)
+For a comprehensive step by step install walkthrough see the [Getting started with google-drive-source slide deck](https://gatsby-site-gds-slide-deck.rcrsv.com). You don't need to use this with Gatsby, that's just the example.
 
 ## Install
 ```npm install --save google-drive-source```
@@ -25,7 +25,7 @@ If you have a build script, you could combine them with [concurrently](https://w
 ```
 By default the gds script runs every 60 seconds. At that time, it fetches a list of files in the folder specified and checks for changes. If no changes, it goes back to sleep and waits. If changes occured, it will fetch only the docs that changed and go to sleep.
 
-You can adjust this time in your scripts or at the command line with WAIT. WAIT accepts minutes. If you want it to  wait 10 minutes, use `WAIT=10`. If you want it to wait about 10 seconds, you can use "WAIT=0.16". Be careful if you are making a lot of changes and/or you have a really slow connection or you may end up starting a new fetch before the old fetch is done.
+You can adjust this time in your scripts or at the command line with WAIT. WAIT accepts minutes. If you want it to  wait 10 minutes, use `WAIT=10`. If you want it to wait about 10 seconds, you can use `WAIT=0.16`. Be careful if you are making a lot of changes and/or you have a really slow connection or you may end up starting a new fetch before the old fetch is done.
 
 ### Config files
 

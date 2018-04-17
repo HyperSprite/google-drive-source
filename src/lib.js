@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { mkdir, test } from 'shelljs';
 import { isAfter } from 'date-fns';
+import kebabCase from 'lodash.kebabcase'
 import gDSDebug from './index';
 
 const defaultFields = 'version, properties, id, kind, name, modifiedTime, trashed, fullFileExtension, fileExtension';
@@ -82,9 +83,9 @@ const getLocalFileStat = fileName =>
 lib.getFilesFromDrive = (folder, files, drive) => {
   gDSDebug(folder);
 
-  // const currentFiles = lib.getFolderContents();
   lib.asyncForEach(files, async file => new Promise(async (resolve, reject) => {
-    const fileName = path.join(folder.outputRoot, folder.localFolder, `${file.name}${folder.fileExtension}`);
+    console.log(kebabCase(file.name));
+    const fileName = path.join(folder.outputRoot, folder.localFolder, `${kebabCase(file.name)}${folder.fileExtension}`);
     const localFileStat = await getLocalFileStat(fileName);
 
     if (isAfter(localFileStat.mtime, file.modifiedTime)) {
