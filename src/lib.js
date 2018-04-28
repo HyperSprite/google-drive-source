@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { mkdir, test } from 'shelljs';
 import { isAfter } from 'date-fns';
-import kebabCase from 'lodash.kebabcase'
+import kebabCase from 'lodash.kebabcase';
 import gDSDebug from './index';
 
 const defaultFields = 'version, properties, id, kind, name, modifiedTime, trashed, fullFileExtension, fileExtension';
@@ -71,13 +71,13 @@ lib.makeDirs = (fullPath) => {
 
 // get file stat
 const getLocalFileStat = fileName =>
-    new Promise((response) => {
-      fs.stat(fileName, (err, fStat) => {
-        if (err) response({ mtime: null });
-        else if (fStat.size <= 1) response({ mtime: null });
-        else response(fStat);
-      });
+  new Promise((response) => {
+    fs.stat(fileName, (err, fStat) => {
+      if (err) response({ mtime: null });
+      else if (fStat.size <= 1) response({ mtime: null });
+      else response(fStat);
     });
+  });
 
 // GET https://www.googleapis.com/drive/v2/files/folderId/children
 lib.getFilesFromDrive = (folder, files, drive) => {

@@ -37,7 +37,9 @@
   "files": [
     "dst"
   ],
-  "precommit": [],
+  "precommit": [
+    "lint",
+  ],
   "eslintConfig": {
     "extends": [
       "airbnb-base"
