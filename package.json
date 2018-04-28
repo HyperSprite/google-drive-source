@@ -38,7 +38,7 @@
     "dst"
   ],
   "precommit": [
-    "lint",
+    "lint"
   ],
   "eslintConfig": {
     "extends": [
